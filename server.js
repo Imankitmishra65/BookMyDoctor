@@ -1,26 +1,20 @@
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose'); // Tool for Cloud DB
+const mongoose = require('mongoose');
 const app = express();
-// Cloud servers assign their own port, or use 5000 locally
-const PORT = process.env.PORT || 5000; 
-
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`✅ Server is running on Port ${PORT}`);
-});
+const PORT = 5000;
 
 app.use(cors());
 app.use(express.json());
 
-// --- 1. CLOUD DATABASE CONNECTION ---
-// I replaced '@' in your password with '%40' so the link doesn't break.
-// I replaced '@' with '%40' so it doesn't break the link
+// --- CLOUD DATABASE CONNECTION ---
 const MONGO_URI = "mongodb+srv://hardikmi2002_db_user:Ankit%40123@cluster0.rswhkef.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
 mongoose.connect(MONGO_URI)
     .then(() => console.log("✅ Connected to MongoDB Cloud"))
     .catch(err => console.error("❌ MongoDB Connection Error:", err));
 
-// --- 2. DEFINE DATA MODELS (Schemas) ---
+// --- DATA MODELS ---
 const BookingSchema = new mongoose.Schema({
     patientName: String,
     doctor: String,
@@ -36,7 +30,7 @@ const UserSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', UserSchema);
 
-// --- 3. DOCTOR DATA (Static List) ---
+// --- DOCTOR DATA ---
 const doctors = [
     { id: 1, name: "Dr. Vinita Das", specialty: "Gynecology", experience: "45+ Years", degree: "MBBS, MD", time: "11:00 AM - 03:00 PM", hospital: "Apollo Hospitals", rating: 4.9, image: "https://img.freepik.com/free-photo/woman-doctor-wearing-lab-coat-with-stethoscope-isolated_1303-29791.jpg" },
     { id: 2, name: "Dr. Amit Gupta", specialty: "Nephrologist", experience: "42+ Years", degree: "MD, DNB", time: "09:00 AM - 05:00 PM", hospital: "Medanta Hospital", rating: 4.7, image: "https://img.freepik.com/free-photo/doctor-with-his-arms-crossed-white-background_1368-5790.jpg" },
@@ -50,47 +44,43 @@ const doctors = [
     { id: 10, name: "Dr. Arun Verma", specialty: "ENT Specialist", experience: "16+ Years", degree: "MBBS, MS", time: "10:00 AM - 01:00 PM", hospital: "City ENT Hospital", rating: 4.6, image: "https://img.freepik.com/free-photo/doctor-offering-medical-advice_23-2147796535.jpg" }
 ];
 
-// --- 4. API ROUTES ---
+// --- API ROUTES ---
 
-// GET Doctors
 app.get('/api/doctors', (req, res) => {
     res.json(doctors);
 });
 
-// BOOK APPOINTMENT (Saved to Cloud)
 app.post('/api/book', async (req, res) => {
     try {
         const newBooking = new Booking({
             patientName: req.body.patientName,
             doctor: req.body.doctor,
+            // 🔥 FIX: FORCE INDIAN TIMEZONE 🔥
             date: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
             paymentId: req.body.paymentId || "Paid Cash"
         });
         await newBooking.save();
-        console.log(`📅 Booking Saved to Cloud: ${req.body.patientName}`);
+        console.log(`📅 Booking Saved: ${req.body.patientName}`);
         res.json({ message: "Booking Confirmed!" });
     } catch (err) {
         res.status(500).json({ message: "Error saving booking" });
     }
 });
 
-// SIGN UP (Saved to Cloud)
 app.post('/api/signup', async (req, res) => {
     try {
         const { name, email, password } = req.body;
         const exists = await User.findOne({ email: email });
-        if (exists) return res.status(400).json({ success: false, message: "Email already exists!" });
+        if (exists) return res.status(400).json({ success: false, message: "Email exists!" });
 
         const newUser = new User({ name, email, password });
         await newUser.save();
-        console.log(`👤 New User Saved: ${name}`);
         res.json({ success: true, message: "Account created!" });
     } catch (err) {
         res.status(500).json({ success: false, message: "Server Error" });
     }
 });
 
-// LOGIN (Checked against Cloud)
 app.post('/api/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -105,14 +95,12 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// FORGOT PASSWORD
 app.post('/api/forgot-password', async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (user) res.json({ success: true, message: "✅ Reset link sent!" });
     else res.status(404).json({ success: false, message: "❌ Email not found." });
 });
 
-// ADMIN ROUTES
 app.get('/api/admin/bookings', async (req, res) => {
     const bookings = await Booking.find();
     res.json(bookings);
@@ -123,8 +111,7 @@ app.get('/api/admin/users', async (req, res) => {
     res.json(users);
 });
 
-// --- 5. START SERVER ---
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ Server is running on Port ${PORT}`);
-
 });
+
