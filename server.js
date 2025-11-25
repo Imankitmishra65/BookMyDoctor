@@ -14,8 +14,8 @@ app.use(express.json());
 
 // --- 1. CLOUD DATABASE CONNECTION ---
 // I replaced '@' in your password with '%40' so the link doesn't break.
-const MONGO_URI = "mongodb+srv://hardikmi2002_db_user:Ankit@123@cluster0.rswhkef.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
+// I replaced '@' with '%40' so it doesn't break the link
+const MONGO_URI = "mongodb+srv://hardikmi2002_db_user:Ankit%40123@cluster0.rswhkef.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 mongoose.connect(MONGO_URI)
     .then(() => console.log("✅ Connected to MongoDB Cloud"))
     .catch(err => console.error("❌ MongoDB Connection Error:", err));
