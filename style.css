@@ -1,0 +1,199 @@
+/* --- 1. Business Theme Variables --- */
+:root {
+    --primary: #246bfd;       /* Trustworthy Medical Blue */
+    --primary-dark: #1952c4;
+    --secondary: #111827;     /* Near Black for text */
+    --gray-text: #6b7280;     /* Soft gray for descriptions */
+    --bg-light: #f9fafb;      /* Very light background */
+    --border: #e5e7eb;        /* Subtle borders */
+    --success: #10b981;       /* Green for verified/available */
+    --white: #ffffff;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+body { background-color: var(--bg-light); color: var(--secondary); line-height: 1.5; }
+a { text-decoration: none; transition: 0.2s; }
+
+/* --- 2. Navigation --- */
+.navbar { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.nav-flex { display: flex; justify-content: space-between; align-items: center; height: 70px; }
+
+.brand-logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+
+.nav-links { display: flex; align-items: center; gap: 25px; }
+.nav-links a { color: var(--secondary); font-weight: 600; font-size: 0.95rem; }
+.nav-links a:hover { color: var(--primary); }
+
+.btn-primary { background: var(--primary); color: white !important; padding: 10px 20px; border-radius: 8px; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-outline { border: 1px solid var(--border); padding: 9px 19px; border-radius: 8px; }
+
+/* --- 3. Hero Section (Search Focused) --- */
+.hero-section { background: linear-gradient(to bottom, #eff6ff, #ffffff); padding: 80px 0 60px 0; text-align: center; }
+.hero-section h1 { font-size: 3rem; font-weight: 800; color: #1e3a8a; margin-bottom: 15px; }
+.hero-sub { font-size: 1.2rem; color: var(--gray-text); margin-bottom: 40px; }
+
+/* Search Bar Container */
+.search-container {
+    background: var(--white);
+    max-width: 800px;
+    margin: 0 auto 30px auto;
+    display: flex;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border);
+}
+
+.input-group { display: flex; align-items: center; padding: 0 15px; flex: 1; }
+.location { border-right: 1px solid var(--border); max-width: 200px; }
+.input-group i { color: var(--gray-text); margin-right: 10px; }
+.input-group input { border: none; outline: none; font-size: 1rem; width: 100%; color: var(--secondary); }
+
+.search-btn { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.search-btn:hover { background: var(--primary-dark); }
+
+.trust-badges { display: flex; justify-content: center; gap: 30px; color: var(--gray-text); font-size: 0.9rem; font-weight: 500; }
+.trust-badges i { color: var(--success); margin-right: 5px; }
+
+/* --- 4. Specialties --- */
+.section-light { padding: 60px 0; background: var(--white); }
+.section-header { text-align: center; margin-bottom: 40px; }
+.section-header h2 { font-size: 2rem; font-weight: 700; margin-bottom: 10px; }
+.section-header.text-left { text-align: left; }
+
+.specialty-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+.spec-card { text-align: center; cursor: pointer; transition: 0.3s; }
+.spec-card:hover { transform: translateY(-5px); }
+.icon-circle { width: 80px; height: 80px; background: #eff6ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: var(--primary); margin: 0 auto 15px auto; }
+.spec-card span { font-weight: 600; color: var(--secondary); }
+
+/* --- 5. Doctor Cards (Business Style) --- */
+.section-white { padding: 60px 0; }
+.doctor-list-layout { display: flex; flex-direction: column; gap: 20px; }
+
+.doctor-business-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 25px;
+    display: flex;
+    gap: 25px;
+    transition: 0.3s;
+    box-shadow: var(--shadow-sm);
+}
+
+.doctor-business-card:hover {
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15);
+    border-color: #bfdbfe;
+}
+
+.doc-avatar { width: 140px; height: 140px; object-fit: cover; border-radius: 12px; }
+
+.doc-center { flex: 2; }
+.doc-name { font-size: 1.4rem; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
+.badge-success { font-size: 0.7rem; background: #dcfce7; color: #166534; padding: 3px 8px; border-radius: 20px; font-weight: 700; text-transform: uppercase; }
+.doc-spec { color: var(--primary); font-weight: 600; margin-bottom: 5px; }
+.doc-exp { font-size: 0.9rem; color: var(--gray-text); margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; width: fit-content; }
+.doc-degree { font-size: 0.9rem; margin-bottom: 5px; }
+.doc-loc { font-size: 0.9rem; color: var(--gray-text); margin-bottom: 10px; }
+.doc-fee { font-weight: 700; color: var(--secondary); }
+.doc-fee span { font-size: 1.2rem; }
+
+.doc-right { flex: 1; display: flex; flex-direction: column; gap: 10px; min-width: 200px; border-left: 1px solid var(--border); padding-left: 25px; justify-content: center; }
+.time-slot { color: #166534; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; text-align: center; background: #dcfce7; padding: 5px; border-radius: 4px; }
+
+.btn-book-app { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; }
+.btn-book-app:hover { background: var(--primary-dark); }
+
+.btn-video-app { background: white; color: var(--primary); border: 1px solid var(--primary); padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; }
+.btn-video-app:hover { background: #eff6ff; }
+
+/* --- 6. Footer --- */
+footer { background: #111827; color: #9ca3af; padding: 60px 0 20px 0; margin-top: 60px; }
+.footer-flex { display: flex; justify-content: space-between; border-bottom: 1px solid #374151; padding-bottom: 40px; }
+.footer-brand h3 { color: white; font-size: 1.5rem; margin-bottom: 10px; }
+.footer-links a { color: #d1d5db; margin-left: 20px; font-size: 0.9rem; }
+.footer-links a:hover { color: white; }
+.copyright { text-align: center; padding-top: 20px; font-size: 0.85rem; }
+
+/* Mobile Utility */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+@media (max-width: 768px) {
+    .search-container { flex-direction: column; }
+    .location { border-right: none; border-bottom: 1px solid var(--border); max-width: 100%; padding: 15px; }
+    .search { padding: 15px; }
+    .search-btn { width: 100%; border-radius: 0 0 12px 12px; }
+    
+    .doctor-business-card { flex-direction: column; }
+    .doc-right { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 20px; }
+    .doc-avatar { width: 100%; height: 200px; }
+    .nav-links { display: none; }
+    /* Utility Class to fix warning */
+.text-center {
+    text-align: center;
+    padding: 30px;
+}
+.error-text {
+    color: red;
+    text-align: center;
+}
+}/* --- MODAL (POPUP) STYLES --- */
+.modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); /* Dimmed background */
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-box {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 350px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.modal-box h2 { margin-bottom: 20px; color: #1e3a8a; }
+
+.modal-box input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.full-btn {
+    width: 100%;
+    padding: 12px;
+    background: #246bfd;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.full-btn:hover { background: #1d4ed8; }
+
+.switch-text { margin-top: 15px; font-size: 0.9rem; }
+.switch-text a { color: #246bfd; font-weight: 600; text-decoration: none; }

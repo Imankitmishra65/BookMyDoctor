@@ -1,0 +1,23 @@
+{
+  "users": [
+    {
+      "name": "Ankit Mishra",
+      "email": "har@",
+      "password": "123"
+    }
+  ],
+  "bookings": [
+    {
+      "id": 1,
+      "patient": "Ankit Mishra",
+      "doctor": "Dr. Vinita Das",
+      "date": "25/11/2025, 2:59:14 pm"
+    },
+    {
+      "id": 2,
+      "patient": "Ankit Mishra",
+      "doctor": "Dr. Vinita Das",
+      "date": "25/11/2025, 3:42:00 pm"
+    }
+  ]
+}
