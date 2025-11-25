@@ -63,7 +63,7 @@ app.post('/api/book', async (req, res) => {
         const newBooking = new Booking({
             patientName: req.body.patientName,
             doctor: req.body.doctor,
-            date: new Date().toLocaleString(),
+            date: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
             paymentId: req.body.paymentId || "Paid Cash"
         });
         await newBooking.save();
@@ -126,4 +126,5 @@ app.get('/api/admin/users', async (req, res) => {
 // --- 5. START SERVER ---
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ Server is running on Port ${PORT}`);
+
 });
