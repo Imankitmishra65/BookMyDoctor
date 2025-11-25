@@ -127,9 +127,8 @@
         </table>
 
     </div>
-
-    <script>
-        // Using localhost for best connection on laptop
+<script>
+        // Link to your Live Backend
         const API_URL = 'https://bookmydoctor-dot4.onrender.com';
 
         // 1. Fetch Bookings
@@ -146,12 +145,11 @@
                     return;
                 }
 
-                bookings.forEach(booking => {
+                bookings.forEach((booking, index) => {
                     const row = `
                         <tr>
-                            <td><strong>#${booking.id}</strong></td>
-                            <td>${booking.patientname}</td>
-                            <td>${booking.doctor}</td>
+                            <td><strong>#${index + 1}</strong></td>
+                            <td>${booking.patientName}</td> <td>${booking.doctor}</td>
                             <td>${booking.date}</td>
                             <td><span class="status-badge">Confirmed</span></td>
                         </tr>
@@ -160,7 +158,7 @@
                 });
             } catch (error) {
                 console.error(error);
-                tableBody.innerHTML = `<tr><td colspan="5" class="text-center p-30 text-red">Connection Failed. Is Server Running?</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="5" class="text-center p-30 text-red">Connection Failed.</td></tr>`;
             }
         }
 
@@ -171,7 +169,7 @@
                 const response = await fetch(`${API_URL}/api/admin/users`);
                 const users = await response.json();
                 
-                tableBody.innerHTML = ''; // Clear loading
+                tableBody.innerHTML = '';
 
                 if (users.length === 0) {
                     tableBody.innerHTML = `<tr><td colspan="4" class="text-center p-30 text-gray">No users registered yet.</td></tr>`;
@@ -191,21 +189,19 @@
                 });
             } catch (error) {
                 console.error(error);
-                tableBody.innerHTML = `<tr><td colspan="4" class="text-center p-30 text-red">Connection Failed. Is Server Running?</td></tr>`;
             }
         }
 
-        // Wrapper function to refresh everything
         function refreshAll() {
             loadBookings();
             loadUsers();
         }
 
-        // Run automatically on page load
         refreshAll();
-        // Change this line near the bottom script:
-            
     </script>
+    
+     
 </body>
 
 </html>
+
