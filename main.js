@@ -2,7 +2,7 @@
 
 const container = document.getElementById('doctorContainer');
 // ⚠️ Use localhost for stability
-const API_URL = 'http://localhost:5000'; 
+const API_URL = 'https://bookmydoctor-dot4.onrender.com';
 
 let allDoctors = [];
 
@@ -208,4 +208,5 @@ function filterByCategory(category) {
 
 // START
 loadDoctors();
+
 checkLoginStatus();
