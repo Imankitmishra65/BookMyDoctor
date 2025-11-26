@@ -26,14 +26,59 @@ function updateLoginButton(name) {
 
 // --- 2. BOOKING FUNCTION (Smart Check) ---
 // --- 2. BOOKING FUNCTION (With Payment) ---
+// --- 2. BOOKING FUNCTION (Login Enforced) ---
 async function bookAppointment(doctorName) {
-    // 1. Check Login
+    // 1. Check Local Storage for the name
     let patientName = localStorage.getItem('userName');
-    
+
     if (!patientName) {
-        patientName = prompt("Please enter your Name to book:");
-        if (!patientName) return;
+        // ❌ CASE A: User is NOT Logged In
+        alert("🔒 You must Login to book an appointment.");
+        openModal();  // Open the popup
+        showLogin();  // Show the Login form
+        return;       // STOP here. Do not proceed to payment.
     }
+
+    // ✅ CASE B: User IS Logged In -> Proceed to Payment
+    
+    // Razorpay Configuration
+    const options = {
+        "key": "rzp_test_1DP5mmOlF5G5ag", // Public Test Key
+        "amount": 50000, // ₹500
+        "currency": "INR",
+        "name": "BookMyDoctor",
+        "description": "Consultation Fee for " + doctorName,
+        "image": "https://cdn-icons-png.flaticon.com/512/3774/3774299.png",
+        "handler": async function (response) {
+            // Payment Success -> Save Booking
+            const paymentId = response.razorpay_payment_id;
+            
+            try {
+                const res = await fetch(`${API_URL}/api/book`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        patientName: patientName, 
+                        doctor: doctorName,
+                        paymentId: paymentId
+                    })
+                });
+                alert(`✅ Booking Confirmed for ${patientName}!`);
+            } catch(err) {
+                alert("Server Error: Payment taken but booking not saved.");
+            }
+        },
+        "prefill": {
+            "name": patientName,
+            "email": "patient@example.com",
+            "contact": "9999999999"
+        },
+        "theme": { "color": "#246bfd" }
+    };
+
+    const rzp1 = new Razorpay(options);
+    rzp1.open();
+}
 
     // 2. Payment Configuration
     const options = {
@@ -210,3 +255,4 @@ function filterByCategory(category) {
 loadDoctors();
 
 checkLoginStatus();
+
