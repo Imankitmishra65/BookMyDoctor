@@ -41,7 +41,10 @@ const doctors = [
     { id: 7, name: "Dr. Pooja Mehta", specialty: "Orthopedic", experience: "14+ Years", degree: "MBBS, MS", time: "09:00 AM - 12:00 PM", hospital: "Bone & Joint Clinic", rating: 4.7, image: "https://img.freepik.com/free-photo/portrait-smiling-handsome-male-doctor-man_171337-5055.jpg" },
     { id: 8, name: "Dr. Vikram Singh", specialty: "General Physician", experience: "25+ Years", degree: "MBBS, MD", time: "08:00 AM - 02:00 PM", hospital: "Family Health Centre", rating: 4.5, image: "https://img.freepik.com/free-photo/portrait-successful-mid-adult-doctor-with-crossed-arms_1262-12865.jpg" },
     { id: 9, name: "Dr. Neha Gupta", specialty: "Pediatrician", experience: "12+ Years", degree: "MBBS, MD", time: "05:00 PM - 08:00 PM", hospital: "Happy Kids Clinic", rating: 4.9, image: "https://img.freepik.com/free-photo/young-woman-doctor-white-coat-looking-camera-smiling-confidently_141793-106240.jpg" },
-    { id: 10, name: "Dr. Arun Verma", specialty: "ENT Specialist", experience: "16+ Years", degree: "MBBS, MS", time: "10:00 AM - 01:00 PM", hospital: "City ENT Hospital", rating: 4.6, image: "https://img.freepik.com/free-photo/doctor-offering-medical-advice_23-2147796535.jpg" }
+    { id: 10, name: "Dr. Arun Verma", specialty: "ENT Specialist", experience: "16+ Years", degree: "MBBS, MS", time: "10:00 AM - 01:00 PM", hospital: "City ENT Hospital", rating: 4.6, image: "https://img.freepik.com/free-photo/doctor-offering-medical-advice_23-2147796535.jpg" },
+    { id: 11, name: "Dr. Ananya Pathak", specialty: "Dentist",  experience: "10+ Years Experience", degree: "BDS", time: "10:00 AM - 05:00 PM", hospital: "City Care Clinic", rating: 4.5,  image: "https://cdn-icons-png.flaticon.com/512/3774/3774299.png" 
+    }
+
 ];
 
 // --- API ROUTES ---
@@ -114,4 +117,5 @@ app.get('/api/admin/users', async (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ Server is running on Port ${PORT}`);
 });
+
 
