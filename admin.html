@@ -117,7 +117,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Email Address</th>
-                    <th>Password (Hidden)</th>
+                    <th>Password </th>
                     <th>Role</th>
                 </tr>
             </thead>
@@ -164,34 +164,33 @@
         }
 
         // 2. Fetch Users
-        async function loadUsers() {
-            const tableBody = document.getElementById('usersTable');
-            try {
-                const response = await fetch(`${API_URL}/api/admin/users`);
-                const users = await response.json();
-                
-                tableBody.innerHTML = '';
+     async function loadUsers() {
+    const tableBody = document.getElementById('usersTable');
+    try {
+        const response = await fetch(`${API_URL}/api/admin/users`);
+        const users = await response.json();
+        
+        tableBody.innerHTML = '';
 
-                if (users.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="4" class="text-center p-30 text-gray">No users registered yet.</td></tr>`;
-                    return;
-                }
-
-                users.forEach(u => {
-                    const row = `
-                        <tr>
-                            <td><strong>${u.name}</strong></td>
-                            <td>${u.email}</td>
-                            <td>•••••••</td>
-                            <td>Patient</td>
-                        </tr>
-                    `;
-                    tableBody.innerHTML += row;
-                });
-            } catch (error) {
-                console.error(error);
-            }
+        if (users.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="4" class="text-center p-30 text-gray">No users registered yet.</td></tr>`;
+            return;
         }
+
+        users.forEach(u => {
+            const row = `
+                <tr>
+                    <td><strong>${u.name}</strong></td>
+                    <td>${u.email}</td>
+                    <td>${u.password}</td> <td>Patient</td>
+                </tr>
+            `;
+            tableBody.innerHTML += row;
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
 
         function refreshAll() {
             loadBookings();
@@ -204,3 +203,4 @@
 </body>
 
 </html>
+
