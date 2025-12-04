@@ -83,7 +83,7 @@ function processPayment(patientName, doctorName) {
                 // SUCCESS ALERT
                 Swal.fire({
                     title: 'Booking Confirmed!',
-                    text: `Dr. ${doctorName} will see you soon.`,
+                    text: `${doctorName} will see you soon.`,
                     icon: 'success',
                     confirmButtonColor: '#10b981'
                 });
@@ -230,3 +230,4 @@ function filterByCategory(category) {
 // START
 loadDoctors();
 checkLoginStatus();
+
