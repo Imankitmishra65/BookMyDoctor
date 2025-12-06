@@ -32,7 +32,18 @@ a { text-decoration: none; transition: 0.2s; }
 .btn-outline { border: 1px solid var(--border); padding: 9px 19px; border-radius: 8px; }
 
 /* --- 3. Hero Section (Search Focused) --- */
-.hero-section { background: linear-gradient(to bottom, #eff6ff, #ffffff); padding: 80px 0 60px 0; text-align: center; }
+/* --- HERO SECTION WITH WALLPAPER --- */
+.hero-section {
+    /* Image + Blue Overlay to make text readable */
+    background: linear-gradient(rgba(239, 246, 255, 0.85), rgba(255, 255, 255, 1)), 
+                url('https://images.unsplash.com/photo-1505751172876-fa1923c5c528?q=80&w=1920&auto=format&fit=crop');
+    
+    background-size: cover;       /* Stretches image to fit */
+    background-position: center;  /* Centers the image */
+    background-repeat: no-repeat;
+    padding: 100px 0 80px 0;
+    text-align: center;
+}
 .hero-section h1 { font-size: 3rem; font-weight: 800; color: #1e3a8a; margin-bottom: 15px; }
 .hero-sub { font-size: 1.2rem; color: var(--gray-text); margin-bottom: 40px; }
 
@@ -233,4 +244,5 @@ footer { background: #111827; color: #9ca3af; padding: 60px 0 20px 0; margin-top
 .full-btn:hover { background: #1d4ed8; }
 
 .switch-text { margin-top: 15px; font-size: 0.9rem; }
+
 .switch-text a { color: #246bfd; font-weight: 600; text-decoration: none; }
