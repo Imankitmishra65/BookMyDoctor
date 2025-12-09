@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Profile - BookMyDoctor</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+        .profile-container {
+            max-width: 900px; margin: 40px auto; background: white; padding: 30px;
+            border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: flex; flex-direction: column; gap: 20px;
+        }
+        .profile-header { display: flex; gap: 30px; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 30px; }
+        .profile-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid #eff6ff; }
+        .badge { background: #dbeafe; color: #2563eb; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        .section-title { font-size: 1.25rem; font-weight: 600; margin-top: 20px; color: #374151; }
+        .review-box { background: #f9fafb; padding: 15px; border-radius: 12px; margin-top: 10px; }
+
+        /* STAR RATING STYLES */
+        .star-rating { direction: rtl; display: inline-block; font-size: 2rem; }
+        .star-rating input { display: none; }
+        .star-rating label { color: #ddd; cursor: pointer; transition: 0.2s; }
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label { color: #f59e0b; }
+        
+        @media (max-width: 768px) { .profile-header { flex-direction: column; text-align: center; } }
+    </style>
+</head>
+<body style="background-color: #f3f4f6;">
+
+    <nav class="navbar">
+        <div class="logo"><a href="index.html" style="text-decoration:none; color:inherit;"><i class="fa-solid fa-user-doctor"></i> BookMyDoctor</a></div>
+        <a href="index.html" class="btn-outline">Back to Home</a>
+    </nav>
+
+    <div id="loading" style="text-align: center; margin-top: 100px;">
+        <i class="fa-solid fa-circle-notch fa-spin fa-3x" style="color: #246bfd;"></i>
+        <p>Loading Doctor Details...</p>
+    </div>
+
+    <div class="profile-container" id="profileContent" style="display: none;">
+        
+        <div class="profile-header">
+            <img src="" alt="Doctor" id="docImg" class="profile-img">
+            <div class="profile-info">
+                <h1 id="docName">Doctor Name</h1>
+                <p id="docSpec" style="font-size: 1.1rem; color: #2563eb;">Specialty</p>
+                <p><i class="fa-solid fa-graduation-cap"></i> <span id="docDegree">Degree</span> | <span id="docExp">Exp</span></p>
+                <p><i class="fa-solid fa-hospital"></i> <span id="docHosp">Hospital</span></p>
+                <div style="margin-top: 15px;">
+                    <span class="badge" id="docRating"><i class="fa-solid fa-star"></i> 4.9 Rating</span>
+                    <span class="badge" style="background: #ecfccb; color: #4d7c0f; margin-left: 10px;">Verified</span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-title">About the Doctor</div>
+            <p id="docAbout" style="line-height: 1.6; color: #4b5563;">Bio loading...</p>
+        </div>
+
+        <div class="review-box" style="background: #fff; border: 2px dashed #e5e7eb; text-align: center;">
+            <h3 style="margin-bottom: 10px;">Rate this Doctor</h3>
+            <div class="star-rating">
+                <input type="radio" id="s5" name="rate" value="5"><label for="s5">★</label>
+                <input type="radio" id="s4" name="rate" value="4"><label for="s4">★</label>
+                <input type="radio" id="s3" name="rate" value="3"><label for="s3">★</label>
+                <input type="radio" id="s2" name="rate" value="2"><label for="s2">★</label>
+                <input type="radio" id="s1" name="rate" value="1"><label for="s1">★</label>
+            </div>
+            <textarea id="reviewText" placeholder="Write your experience..." style="width: 100%; margin-top: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 8px;"></textarea>
+            <button onclick="submitReview()" class="btn-primary" style="margin-top: 10px; padding: 8px 20px;">Submit Review</button>
+        </div>
+
+        <div>
+            <div class="section-title">Patient Reviews</div>
+            <div id="reviewsList"></div>
+        </div>
+
+        <div style="margin-top: 20px; display: flex; gap: 15px; justify-content: flex-end;">
+            <button class="btn-book-app" id="bookBtn" style="padding: 15px 40px; font-size: 1.1rem;">Book Appointment</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://bookmydoctor-dot4.onrender.com'; 
+        let currentDoctorName = "";
+
+        // 1. Get ID
+        const urlParams = new URLSearchParams(window.location.search);
+        const doctorId = parseInt(urlParams.get('id'));
+
+        // 2. Load Profile
+        async function loadProfile() {
+            try {
+                const res = await fetch(`${API_URL}/api/doctors`);
+                const doctors = await res.json();
+                const doc = doctors.find(d => d.id === doctorId);
+
+                if (doc) {
+                    document.getElementById('docImg').src = doc.image;
+                    document.getElementById('docName').innerText = doc.name;
+                    document.getElementById('docSpec').innerText = doc.specialty;
+                    document.getElementById('docDegree').innerText = doc.degree;
+                    document.getElementById('docExp').innerText = doc.experience;
+                    document.getElementById('docHosp').innerText = doc.hospital;
+                    document.getElementById('docRating').innerHTML = `<i class="fa-solid fa-star"></i> ${doc.rating} Rating`;
+                    document.getElementById('docAbout').innerText = doc.about || "Experienced specialist dedicated to patient care.";
+                    
+                    currentDoctorName = doc.name;
+
+                    // Load Reviews
+                    const reviewsBox = document.getElementById('reviewsList');
+                    reviewsBox.innerHTML = '';
+                    if(doc.reviews && doc.reviews.length > 0) {
+                        doc.reviews.forEach(rev => {
+                            reviewsBox.innerHTML += `
+                                <div class="review-box">
+                                    <strong>${rev.user}</strong> <span style="color:orange">★${rev.stars}</span>
+                                    <p style="margin:5px 0; font-size:0.9rem;">"${rev.text}"</p>
+                                </div>
+                            `;
+                        });
+                    } else { reviewsBox.innerHTML = '<p style="color:gray">No reviews yet.</p>'; }
+
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('profileContent').style.display = 'flex';
+                } else {
+                    document.body.innerHTML = "<h2 style='text-align:center; margin-top:50px;'>Doctor Not Found</h2>";
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        // 3. Submit Review
+        async function submitReview() {
+            const stars = document.querySelector('input[name="rate"]:checked')?.value;
+            const text = document.getElementById('reviewText').value;
+            const patientName = localStorage.getItem('userName');
+
+            if(!patientName) return Swal.fire('Login Required', 'Please login to rate.', 'warning');
+            if(!stars) return Swal.fire('Rating Missing', 'Please click a star.', 'warning');
+            if(!text) return Swal.fire('Review Missing', 'Please write a comment.', 'warning');
+
+            try {
+                const res = await fetch(`${API_URL}/api/doctors/review`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ doctorId, user: patientName, stars, text })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    Swal.fire('Success', 'Review submitted!', 'success').then(() => location.reload());
+                } else { Swal.fire('Error', 'Could not save review.', 'error'); }
+            } catch(err) { Swal.fire('Error', 'Server Error', 'error'); }
+        }
+
+        // 4. Book Appointment
+        document.getElementById('bookBtn').onclick = function() {
+            let patientName = localStorage.getItem('userName');
+            if(!patientName) {
+                Swal.fire('Login Required', 'Please login first.', 'warning').then(() => window.location.href = 'index.html');
+                return;
+            }
+            const options = {
+                "key": "rzp_test_1DP5mmOlF5G5ag",
+                "amount": 50000,
+                "name": "BookMyDoctor",
+                "description": "Fee for " + currentDoctorName,
+                "handler": async function (response) {
+                    await fetch(`${API_URL}/api/book`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            patientName: patientName, doctor: currentDoctorName, paymentId: response.razorpay_payment_id
+                        })
+                    });
+                    Swal.fire('Success', 'Booking Confirmed!', 'success').then(() => window.location.href = 'index.html');
+                }
+            };
+            const rzp1 = new Razorpay(options);
+            rzp1.open();
+        };
+
+        loadProfile();
+    </script>
+</body>
+</html>
