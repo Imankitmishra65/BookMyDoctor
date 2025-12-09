@@ -1,3 +1,4 @@
+
 /* --- 1. Business Theme Variables --- */
 :root {
     --primary: #246bfd;       /* Trustworthy Medical Blue */
@@ -44,9 +45,6 @@ a { text-decoration: none; transition: 0.2s; }
     padding: 100px 0 80px 0;
     text-align: center;
 }
-.hero-section h1 { font-size: 3rem; font-weight: 800; color: #1e3a8a; margin-bottom: 15px; }
-.hero-sub { font-size: 1.2rem; color: var(--gray-text); margin-bottom: 40px; }
-
 /* Search Bar Container */
 .search-container {
     background: var(--white);
@@ -244,5 +242,4 @@ footer { background: #111827; color: #9ca3af; padding: 60px 0 20px 0; margin-top
 .full-btn:hover { background: #1d4ed8; }
 
 .switch-text { margin-top: 15px; font-size: 0.9rem; }
-
 .switch-text a { color: #246bfd; font-weight: 600; text-decoration: none; }
