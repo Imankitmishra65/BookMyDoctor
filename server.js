@@ -29,11 +29,37 @@ const UserSchema = new mongoose.Schema({
     password: String
 });
 const User = mongoose.model('User', UserSchema);
-
 // --- DOCTOR DATA ---
-const doctors = [
-    { id: 1, name: "Dr. Vinita Das", specialty: "Gynecology", experience: "45+ Years", degree: "MBBS, MD", time: "11:00 AM - 03:00 PM", hospital: "Apollo Hospitals", rating: 4.9, image: "https://img.freepik.com/free-photo/woman-doctor-wearing-lab-coat-with-stethoscope-isolated_1303-29791.jpg" },
-    { id: 2, name: "Dr. Amit Gupta", specialty: "Nephrologist", experience: "42+ Years", degree: "MD, DNB", time: "09:00 AM - 05:00 PM", hospital: "Medanta Hospital", rating: 4.7, image: "https://img.freepik.com/free-photo/doctor-with-his-arms-crossed-white-background_1368-5790.jpg" },
+const doctors = [{ 
+        id: 1, 
+        name: "Dr. Vinita Das", 
+        specialty: "Gynecology", 
+        experience: "45+ Years", 
+        degree: "MBBS, MD", 
+        time: "11:00 AM - 03:00 PM", 
+        hospital: "Apollo Hospitals", 
+        rating: 4.9, 
+        image: "https://img.freepik.com/free-photo/woman-doctor-wearing-lab-coat-with-stethoscope-isolated_1303-29791.jpg",
+        about: "Dr. Vinita is a senior specialist with over 4 decades of experience in women's health and high-risk pregnancies.",
+        reviews: [
+            { user: "Anjali K.", text: "Very polite and experienced doctor.", stars: 5 },
+            { user: "Rahul S.", text: "Wait time was long, but treatment was good.", stars: 4 }
+        ]
+    },
+    { 
+        id: 2, 
+        name: "Dr. Amit Gupta", 
+        specialty: "Nephrologist", 
+        experience: "42+ Years", 
+        degree: "MD, DNB", 
+        time: "09:00 AM - 05:00 PM", 
+        hospital: "Medanta Hospital", 
+        rating: 4.7, 
+        image: "https://img.freepik.com/free-photo/doctor-with-his-arms-crossed-white-background_1368-5790.jpg",
+        about: "Dr. Amit is a renowned Kidney specialist focusing on transplant medicine and dialysis care.",
+        reviews: [
+            { user: "Karan M.", text: "Saved my father's life. Best doctor.", stars: 5 }
+        ]
     { id: 3, name: "Dr. Sarah Johnson", specialty: "Dentist", experience: "10+ Years", degree: "BDS, MDS", time: "04:00 PM - 09:00 PM", hospital: "Smile Care Clinic", rating: 4.8, image: "https://img.freepik.com/free-photo/pleased-young-female-doctor-wearing-medical-robe-stethoscope-around-neck-standing-with-closed-posture_409827-254.jpg" },
     { id: 4, name: "Dr. Rajesh Kumar", specialty: "Cardiologist", experience: "18+ Years", degree: "MBBS, MD, DM", time: "10:00 AM - 02:00 PM", hospital: "Heart & Soul Centre", rating: 5.0, image: "https://img.freepik.com/free-photo/portrait-hansome-young-male-doctor-man_171337-5068.jpg" },
     { id: 5, name: "Dr. Anjali Desai", specialty: "Dermatologist", experience: "8+ Years", degree: "MBBS, MD", time: "12:00 PM - 04:00 PM", hospital: "Skin Glow Clinic", rating: 4.6, image: "https://img.freepik.com/free-photo/female-doctor-lab-coat-white-isolated-confident-smile_343596-6556.jpg" },
@@ -42,12 +68,24 @@ const doctors = [
     { id: 8, name: "Dr. Vikram Singh", specialty: "General Physician", experience: "25+ Years", degree: "MBBS, MD", time: "08:00 AM - 02:00 PM", hospital: "Family Health Centre", rating: 4.5, image: "https://img.freepik.com/free-photo/portrait-successful-mid-adult-doctor-with-crossed-arms_1262-12865.jpg" },
     { id: 9, name: "Dr. Neha Gupta", specialty: "Pediatrician", experience: "12+ Years", degree: "MBBS, MD", time: "05:00 PM - 08:00 PM", hospital: "Happy Kids Clinic", rating: 4.9, image: "https://img.freepik.com/free-photo/young-woman-doctor-white-coat-looking-camera-smiling-confidently_141793-106240.jpg" },
     { id: 10, name: "Dr. Arun Verma", specialty: "ENT Specialist", experience: "16+ Years", degree: "MBBS, MS", time: "10:00 AM - 01:00 PM", hospital: "City ENT Hospital", rating: 4.6, image: "https://img.freepik.com/free-photo/doctor-offering-medical-advice_23-2147796535.jpg" },
-    { id: 11, name: "Dr. Ankit Mishra", specialty: "Dentist",  experience: "10+ Years Experience", degree: "BDS", time: "10:00 AM - 05:00 PM", hospital: "City Care Clinic", rating: 4.5,  image: "https://i.postimg.cc/Wp5qC7X8/20230915-061146.jpg" }
-
-];
+   { 
+        id: 11, 
+        name: "Dr. Ankit Mishra", 
+        specialty: "Dentist", 
+        experience: "10+ Years", 
+        degree: "BDS", 
+        time: "10:00 AM - 05:00 PM", 
+        hospital: "City Care Clinic", 
+        rating: 4.5, 
+        image: "https://raw.githubusercontent.com/Imankitmishra65/BookMyDoctor/blob/main/20230915_061146.jpg", // Or your raw github link
+        about: "Dr. Ankit specializes in painless root canals and cosmetic dentistry.",
+        reviews: [
+            { user: "Simran", text: "Very gentle and clean clinic.", stars: 5 }
+        ]
+    }
+]; 
 
 // --- API ROUTES ---
-
 app.get('/api/doctors', (req, res) => {
     res.json(doctors);
 });
@@ -112,14 +150,37 @@ app.get('/api/admin/users', async (req, res) => {
     const users = await User.find();
     res.json(users);
 });
+// --- ADD REVIEW API ---
+app.post('/api/doctors/review', (req, res) => {
+    const { doctorId, user, stars, text } = req.body;
+    
+    // 1. Find the Doctor
+    const doc = doctors.find(d => d.id === parseInt(doctorId));
+    if (!doc) return res.status(404).json({ message: "Doctor not found" });
 
+    // 2. Add the Review
+    if (!doc.reviews) doc.reviews = []; // Safety check
+    doc.reviews.push({ user, text, stars: parseInt(stars) });
+
+    // 3. Recalculate Average Rating
+    const totalStars = doc.reviews.reduce((sum, r) => sum + r.stars, 0);
+    doc.rating = (totalStars / doc.reviews.length).toFixed(1); // e.g., "4.8"
+
+    res.json({ success: true, newRating: doc.rating, reviews: doc.reviews });
+});
+
+// --- GET PATIENT'S BOOKINGS ---
+app.get('/api/my-bookings', async (req, res) => {
+    const { name } = req.query;
+    if (!name) return res.status(400).json({ message: "Name required" });
+    try {
+        const myBookings = await Booking.find({ patientName: name });
+        res.json(myBookings);
+    } catch (err) {
+        res.status(500).json({ message: "Server Error" });
+    }
+});
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ Server is running on Port ${PORT}`);
 });
-
-
-
-
-
-
 
