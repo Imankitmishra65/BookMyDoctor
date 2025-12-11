@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* --- DASHBOARD STYLES --- */
         .dashboard-container {
             max-width: 800px; margin: 50px auto; padding: 20px;
         }
@@ -14,16 +15,42 @@
             background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: white; padding: 30px; border-radius: 16px; margin-bottom: 30px;
             display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
         }
         .booking-card {
             background: white; padding: 20px; border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px;
             display: flex; justify-content: space-between; align-items: center;
-            border-left: 5px solid #10b981;
+            border-left: 5px solid #10b981; transition: transform 0.2s;
         }
+        .booking-card:hover { transform: translateY(-2px); }
+        
         .btn-logout {
             background: rgba(255,255,255,0.2); color: white; border: none; padding: 10px 20px;
             border-radius: 8px; cursor: pointer; backdrop-filter: blur(5px);
+            font-weight: 600; transition: background 0.3s;
+        }
+        .btn-logout:hover { background: rgba(255,255,255,0.3); }
+
+        /* --- NEW: STYLISH BACK TO HOME BUTTON --- */
+        .btn-home {
+            background-color: white;
+            color: #2563eb;
+            border: 1px solid #e5e7eb;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .btn-home:hover {
+            background-color: #eff6ff;
+            border-color: #2563eb;
+            transform: translateY(-1px);
         }
     </style>
 </head>
@@ -35,21 +62,30 @@
                 <i class="fa-solid fa-user-doctor"></i> BookMyDoctor
             </a>
         </div>
-        <a href="index.html" class="btn-outline">Back to Home</a>
+        <a href="index.html" class="btn-home">
+            <i class="fa-solid fa-arrow-left"></i> Back to Home
+        </a>
     </nav>
 
     <div class="dashboard-container">
         <div class="welcome-box">
             <div>
-                <h1 style="margin:0;">Hello, <span id="userName">Patient</span></h1>
+                <h1 style="margin:0; font-size: 1.8rem;">Hello, <span id="userName">Patient</span></h1>
                 <p style="margin:5px 0 0 0; opacity: 0.9;">Here are your past appointments</p>
             </div>
-            <button onclick="logout()" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            <button onclick="logout()" class="btn-logout">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
         </div>
 
-        <h3 style="color: #374151; margin-bottom: 15px;">Appointment History</h3>
+        <h3 style="color: #374151; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #e5e7eb;">
+            Appointment History
+        </h3>
         <div id="bookingList">
-            <p style="text-align:center;">Loading history...</p>
+            <div style="text-align: center; margin-top: 50px;">
+                <i class="fa-solid fa-circle-notch fa-spin fa-2x" style="color: #2563eb;"></i>
+                <p style="color: #6b7280; margin-top: 10px;">Loading your history...</p>
+            </div>
         </div>
     </div>
 
@@ -58,7 +94,7 @@
         const user = localStorage.getItem('userName');
 
         if(!user) {
-            window.location.href = 'index.html'; // Redirect if not logged in
+            window.location.href = 'index.html'; 
         } else {
             document.getElementById('userName').innerText = user;
             loadHistory();
@@ -66,15 +102,24 @@
 
         async function loadHistory() {
             try {
-                // Fetch bookings for this specific user
+                // Fetch bookings
                 const res = await fetch(`${API_URL}/api/my-bookings?name=${user}`);
+                
+                // ✅ SAFETY CHECK: If server sends HTML error (404/500), stop here
+                if (!res.ok) throw new Error("Server API not found");
+
                 const bookings = await res.json();
                 
                 const list = document.getElementById('bookingList');
                 list.innerHTML = '';
 
                 if(bookings.length === 0) {
-                    list.innerHTML = '<p style="color:gray; text-align:center;">No appointments found.</p>';
+                    list.innerHTML = `
+                        <div style="text-align:center; padding: 40px; color: #6b7280;">
+                            <i class="fa-regular fa-calendar-xmark fa-3x" style="margin-bottom:15px; opacity:0.5;"></i>
+                            <p>No appointments found.</p>
+                            <a href="index.html" style="color: #2563eb; font-weight:600;">Book your first visit</a>
+                        </div>`;
                     return;
                 }
 
@@ -82,25 +127,29 @@
                     list.innerHTML += `
                         <div class="booking-card">
                             <div>
-                                <h3 style="margin:0; color:#1f2937;">${b.doctor}</h3>
+                                <h3 style="margin:0; color:#1f2937; font-size: 1.1rem;">${b.doctor}</h3>
                                 <p style="margin:5px 0; color:#6b7280; font-size:0.9rem;">
-                                    <i class="fa-regular fa-calendar"></i> ${b.date}
+                                    <i class="fa-regular fa-calendar" style="margin-right: 5px;"></i> ${b.date}
                                 </p>
                             </div>
-                            <span style="background:#d1fae5; color:#065f46; padding:5px 12px; border-radius:20px; font-size:0.8rem; font-weight:bold;">
-                                Confirmed
+                            <span style="background:#d1fae5; color:#065f46; padding:6px 14px; border-radius:20px; font-size:0.8rem; font-weight:bold; display: flex; align-items: center; gap: 5px;">
+                                <i class="fa-solid fa-check"></i> Confirmed
                             </span>
                         </div>
                     `;
                 });
             } catch(err) {
                 console.error(err);
-                document.getElementById('bookingList').innerHTML = '<p style="color:red">Failed to load history.</p>';
+                document.getElementById('bookingList').innerHTML = `
+                    <div style="text-align:center; color:#ef4444; padding: 20px;">
+                        <i class="fa-solid fa-triangle-exclamation fa-2x"></i>
+                        <p style="margin-top:10px;"><b>Failed to load history.</b><br>Is the server updated?</p>
+                    </div>`;
             }
         }
 
         function logout() {
-            if(confirm("Logout?")) {
+            if(confirm("Are you sure you want to logout?")) {
                 localStorage.removeItem('userName');
                 window.location.href = 'index.html';
             }
